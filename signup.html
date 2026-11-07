@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign Up — ShieldScan</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<nav class="navbar"><div class="brand"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 3L35 9.5V20.5C35 29.5 28.5 36 20 38.5C11.5 36 5 29.5 5 20.5V9.5Z" fill="#1a1a1a" stroke="#fff" stroke-width="1.6"/><rect x="13.5" y="19.5" width="13" height="10" rx="2.5" fill="#e63946"/><path d="M16.5 19.5V15.5a3.5 3.5 0 017 0v4" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="24" r="1.8" fill="#1a1a1a"/></svg><div class="brand-text"><h1>Shield<span>Scan</span></h1><p>Detect. Analyze. Protect.</p></div></div><div class="nav-links"><a href="index.html">Home</a><a href="features.html">Features</a><a href="about.html">About Us</a><a href="how-it-works.html">How It Works</a></div><a href="dashboard.html" class="btn-dashboard"><svg width="15" height="15" fill="none" stroke="#e63946" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>Dashboard</a></nav>
+<div class="page-wrap" style="max-width:480px"><h2>Create Account</h2><p class="subtitle">Sign up to start scanning and track your history.</p>
+<div class="form-box">
+<input type="text" id="name" placeholder="Full name">
+<input type="email" id="email" placeholder="Email address">
+<input type="password" id="password" placeholder="Password">
+<button class="btn-red" id="signupBtn">Sign Up &nbsp;→</button>
+<p class="err" id="err"></p>
+<p class="auth-note">Already have an account? <a href="login.html">Login here</a></p>
+</div></div>
+<footer>© 2026 ShieldScan — Final Year Project. All rights reserved.</footer>
+<script src="js/config.js"></script>
+<script>
+document.getElementById("signupBtn").onclick=async()=>{
+const name=document.getElementById("name").value.trim();
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
+const err=document.getElementById("err");err.textContent="";
+if(!name||!email||!password){err.textContent="Fill in all fields.";return;}
+try{const r=await fetch(`${API}/auth/signup`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,email,password})});
+const d=await r.json();if(!r.ok){err.textContent=d.error||"Signup failed.";return;}
+setToken(d.token);window.location.href="dashboard.html";}catch{err.textContent="Cannot reach backend.";}};
+</script>
+</body></html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IP Scanner — ShieldScan</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<nav class="navbar"><div class="brand"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 3L35 9.5V20.5C35 29.5 28.5 36 20 38.5C11.5 36 5 29.5 5 20.5V9.5Z" fill="#1a1a1a" stroke="#fff" stroke-width="1.6"/><rect x="13.5" y="19.5" width="13" height="10" rx="2.5" fill="#e63946"/><path d="M16.5 19.5V15.5a3.5 3.5 0 017 0v4" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="24" r="1.8" fill="#1a1a1a"/></svg><div class="brand-text"><h1>Shield<span>Scan</span></h1><p>Detect. Analyze. Protect.</p></div></div><div class="nav-links"><a href="index.html">Home</a><a href="features.html">Features</a><a href="about.html">About Us</a><a href="how-it-works.html">How It Works</a></div><a href="dashboard.html" class="btn-dashboard"><svg width="15" height="15" fill="none" stroke="#e63946" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>Dashboard</a></nav>
+<div class="page-wrap"><h2>🖥️ IP Scanner</h2><p class="subtitle">Enter any IPv4 address to check its reputation, location and threat level.</p>
+<div class="form-box">
+<input type="text" id="ipInput" placeholder="e.g.  8.8.8.8">
+<button class="btn-red" id="scanBtn">Scan Now &nbsp;→</button>
+<p class="err" id="err"></p>
+<div class="result-box" id="result">
+<div class="result-row"><span class="label">IP Address</span><span id="r_ip"></span></div>
+<div class="result-row"><span class="label">Country</span><span id="r_country"></span></div>
+<div class="result-row"><span class="label">City / Region</span><span id="r_city"></span></div>
+<div class="result-row"><span class="label">ISP</span><span id="r_isp"></span></div>
+<div class="result-row"><span class="label">ASN</span><span id="r_asn"></span></div>
+<div class="result-row"><span class="label">VPN / Proxy</span><span id="r_proxy"></span></div>
+<div class="result-row"><span class="label">Datacenter</span><span id="r_hosting"></span></div>
+<div class="result-row"><span class="label">Abuse Score</span><span id="r_abuse"></span></div>
+<div class="result-row"><span class="label">Threat Level</span><span id="r_threat"></span></div>
+</div></div></div>
+<footer>© 2026 ShieldScan — Final Year Project. All rights reserved.</footer>
+<script src="js/config.js"></script>
+<script>
+document.getElementById("scanBtn").onclick=async()=>{
+const ip=document.getElementById("ipInput").value.trim();
+const err=document.getElementById("err");const box=document.getElementById("result");
+err.textContent="";box.classList.remove("show");
+if(!ip){err.textContent="Please enter an IP address.";return;}
+try{const r=await fetch(`${API}/scan-ip`,{method:"POST",headers:{"Content-Type":"application/json",...authHdr()},body:JSON.stringify({ip})});
+const d=await r.json();if(!r.ok){err.textContent=d.error||"Error";return;}
+document.getElementById("r_ip").textContent=d.ip;
+document.getElementById("r_country").textContent=d.country;
+document.getElementById("r_city").textContent=`${d.city}, ${d.region}`;
+document.getElementById("r_isp").textContent=d.isp;
+document.getElementById("r_asn").textContent=d.asn;
+document.getElementById("r_proxy").textContent=d.isVpnOrProxy?"Yes ⚠️":"No ✅";
+document.getElementById("r_hosting").textContent=d.isHosting?"Yes":"No";
+document.getElementById("r_abuse").textContent=d.abuseScore+" / 100";
+document.getElementById("r_threat").innerHTML=`<span class="badge ${d.threatLevel}">${d.threatLevel.toUpperCase()}</span>`;
+box.classList.add("show");}catch{err.textContent="Cannot reach backend. Is the server running?";}};
+</script>
+</body></html>

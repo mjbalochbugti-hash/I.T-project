@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Check URL — ShieldScan</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<nav class="navbar"><div class="brand"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 3L35 9.5V20.5C35 29.5 28.5 36 20 38.5C11.5 36 5 29.5 5 20.5V9.5Z" fill="#1a1a1a" stroke="#fff" stroke-width="1.6"/><rect x="13.5" y="19.5" width="13" height="10" rx="2.5" fill="#e63946"/><path d="M16.5 19.5V15.5a3.5 3.5 0 017 0v4" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="24" r="1.8" fill="#1a1a1a"/></svg><div class="brand-text"><h1>Shield<span>Scan</span></h1><p>Detect. Analyze. Protect.</p></div></div><div class="nav-links"><a href="index.html">Home</a><a href="features.html">Features</a><a href="about.html">About Us</a><a href="how-it-works.html">How It Works</a></div><a href="dashboard.html" class="btn-dashboard"><svg width="15" height="15" fill="none" stroke="#e63946" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>Dashboard</a></nav>
+<div class="page-wrap"><h2>🌐 Suspicious URL Detect</h2><p class="subtitle">Enter any URL to instantly check if it is Safe, Suspicious, or Malicious.</p>
+<div class="form-box">
+<input type="text" id="urlInput" placeholder="e.g.  https://example.com">
+<button class="btn-red" id="checkBtn">Check URL &nbsp;→</button>
+<p class="err" id="err"></p>
+<div class="result-box" id="result">
+<div class="result-row"><span class="label">URL</span><span id="r_url" style="max-width:60%;word-break:break-all;text-align:right"></span></div>
+<div class="result-row"><span class="label">Status</span><span id="r_status"></span></div>
+<div class="result-row"><span class="label">Confidence</span><span id="r_conf"></span></div>
+<p class="factors-title">Reasons:</p>
+<ul class="factors-list" id="r_reasons"></ul>
+</div></div></div>
+<footer>© 2026 ShieldScan — Final Year Project. All rights reserved.</footer>
+<script src="js/config.js"></script>
+<script>
+    
+document.getElementById("checkBtn").onclick=async()=>{
+    event.preventDefault();
+const url=document.getElementById("urlInput").value.trim();
+const err=document.getElementById("err");const box=document.getElementById("result");
+err.textContent="";box.classList.remove("show");
+if(!url){err.textContent="Please enter a URL.";return;}
+try{const r=await fetch(`${API}/check-url`,{method:"POST",headers:{"Content-Type":"application/json",...authHdr()},body:JSON.stringify({url})});
+const d=await r.json();if(!r.ok){err.textContent=d.error||"Error";return;}
+document.getElementById("r_url").textContent=d.url;
+document.getElementById("r_status").innerHTML=`<span class="badge ${d.status}">${d.status.toUpperCase()}</span>`;
+document.getElementById("r_conf").textContent=d.confidence+"%";
+const ul=document.getElementById("r_reasons");ul.innerHTML="";
+d.reasons.forEach(f=>{const li=document.createElement("li");li.textContent=f;ul.appendChild(li);});
+box.classList.add("show");}catch{err.textContent="Cannot reach backend. Is the server running?";}};
+</script>
+</body></html>

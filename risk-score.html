@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Risk Score — ShieldScan</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<nav class="navbar"><div class="brand"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 3L35 9.5V20.5C35 29.5 28.5 36 20 38.5C11.5 36 5 29.5 5 20.5V9.5Z" fill="#1a1a1a" stroke="#fff" stroke-width="1.6"/><rect x="13.5" y="19.5" width="13" height="10" rx="2.5" fill="#e63946"/><path d="M16.5 19.5V15.5a3.5 3.5 0 017 0v4" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round"/><circle cx="20" cy="24" r="1.8" fill="#1a1a1a"/></svg><div class="brand-text"><h1>Shield<span>Scan</span></h1><p>Detect. Analyze. Protect.</p></div></div><div class="nav-links"><a href="index.html">Home</a><a href="features.html">Features</a><a href="about.html">About Us</a><a href="how-it-works.html">How It Works</a></div><a href="dashboard.html" class="btn-dashboard"><svg width="15" height="15" fill="none" stroke="#e63946" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>Dashboard</a></nav>
+<div class="page-wrap"><h2>🎯 Risk Score</h2><p class="subtitle">Enter an IP address or domain to get a risk score out of 100.</p>
+<div class="form-box">
+<input type="text" id="tInput" placeholder="e.g.  8.8.8.8  or  example.com">
+<button class="btn-red" id="checkBtn">Check Risk &nbsp;→</button>
+<p class="err" id="err"></p>
+<div class="result-box" id="result">
+<div class="result-row"><span class="label">Target</span><span id="r_target"></span></div>
+<div class="result-row"><span class="label">Risk Score</span><span id="r_score"></span></div>
+<div class="result-row"><span class="label">Recommendation</span><span id="r_rec" style="max-width:60%;text-align:right"></span></div>
+<p class="factors-title">Risk Factors:</p>
+<ul class="factors-list" id="r_factors"></ul>
+</div></div></div>
+<footer>© 2026 ShieldScan — Final Year Project. All rights reserved.</footer>
+<script src="js/config.js"></script>
+<script>
+document.getElementById("checkBtn").onclick=async()=>{
+const target=document.getElementById("tInput").value.trim();
+const err=document.getElementById("err");const box=document.getElementById("result");
+err.textContent="";box.classList.remove("show");
+if(!target){err.textContent="Please enter an IP or domain.";return;}
+try{const r=await fetch(`${API}/risk-score`,{method:"POST",headers:{"Content-Type":"application/json",...authHdr()},body:JSON.stringify({target})});
+const d=await r.json();if(!r.ok){err.textContent=d.error||"Error";return;}
+const lvl=d.score>=60?"high":d.score>=30?"medium":"low";
+document.getElementById("r_target").textContent=d.target;
+document.getElementById("r_score").innerHTML=`<span class="badge ${lvl}">${d.score} / 100</span>`;
+document.getElementById("r_rec").textContent=d.recommendation;
+const ul=document.getElementById("r_factors");ul.innerHTML="";
+d.factors.forEach(f=>{const li=document.createElement("li");li.textContent=f;ul.appendChild(li);});
+box.classList.add("show");}catch{err.textContent="Cannot reach backend. Is the server running?";}};
+</script>
+</body></html>
