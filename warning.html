@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ShieldScan Warning</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh; background: #0f0f0f; color: #f5f5f5;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .box {
+    width: 100%; max-width: 440px; background: #1a1a1a;
+    border: 1px solid #2e2e2e; border-top: 6px solid #e63946;
+    border-radius: 12px; padding: 26px 26px 22px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  }
+  .box.suspicious { border-top-color: #f1c40f; }
+  .head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .icon { font-size: 34px; }
+  .head h1 { font-size: 19px; font-weight: 800; }
+  .head h1 span { color: #e63946; }
+  .status {
+    display: inline-block; padding: 4px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; margin-bottom: 14px;
+    background: rgba(230,57,70,0.15); color: #e63946;
+  }
+  .suspicious .status { background: rgba(241,196,15,0.15); color: #f1c40f; }
+  .msg { font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 12px; }
+  .url {
+    background: #111; border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 10px 12px; font-size: 12px; color: #e63946;
+    word-break: break-all; margin-bottom: 12px;
+  }
+  .reason { font-size: 13px; color: #999; margin-bottom: 20px; }
+  .reason b { color: #ddd; }
+  .btns { display: flex; gap: 10px; }
+  button {
+    flex: 1; padding: 12px; border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+  #backBtn { background: #e63946; color: #fff; }
+  #backBtn:hover { background: #c5293a; }
+  #goBtn { background: #2a2a2a; color: #ccc; }
+  #goBtn:hover { background: #3a3a3a; }
+  .foot { text-align: center; font-size: 11px; color: #555; margin-top: 16px; }
+</style>
+</head>
+<body>
+  <div class="box" id="box">
+    <div class="head">
+      <div class="icon" id="icon">&#128680;</div>
+      <h1>Shield<span>Scan</span> Warning</h1>
+    </div>
+    <div class="status" id="status">MALICIOUS</div>
+    <p class="msg">This website looks <b id="word">fake</b>. Visiting it may put your passwords, money or personal data at risk. Do you still want to open it?</p>
+    <div class="url" id="url"></div>
+    <p class="reason"><b>Reason:</b> <span id="reason"></span> <span id="conf"></span></p>
+    <div class="btns">
+      <button id="backBtn">Go Back (Safe)</button>
+      <button id="goBtn">Continue Anyway</button>
+    </div>
+    <p class="foot">Protected by ShieldScan &mdash; Detect. Analyze. Protect.</p>
+  </div>
+  <script src="warning.js"></script>
+</body>
+</html>
